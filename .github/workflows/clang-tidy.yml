@@ -20,8 +20,38 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang-tidy
 
-      - name: Configure
-        run: cmake -S . -B build
+      - name: Install MetaCall language dependencies
+        run: |
+          ./tools/metacall-environment.sh \
+          debug \
+          python \
+          ruby \
+          nodejs \
+          typescript \
+          file \
+          rpc \
+          wasm \
+          java \
+          c \
+          cobol \
+          rust
+      - name: Configure MetaCall
+        run: |
+          mkdir -p build
+          cd build
+          ../tools/metacall-configure.sh \
+          debug \
+          python \
+          ruby \
+          nodejs \
+          typescript \
+          file \
+          rpc \
+          wasm \
+          java \
+          c \
+          cobol \
+          rust
 
       - name: Run clang-tidy
         run: cmake --build build --target clang-tidy
