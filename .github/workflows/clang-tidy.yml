@@ -55,3 +55,20 @@ jobs:
 
       - name: Run clang-tidy
         run: cmake --build build --target clang-tidy
+
+  clang-tidy-windows-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install clang-tidy
+        shell: pwsh
+        run: .\tools\metacall-environment.ps1 clangtidy
+
+      - name: Verify clang-tidy
+        shell: pwsh
+        run: |
+          Get-Command clang-tidy
+          clang-tidy --version
