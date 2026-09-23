@@ -72,3 +72,18 @@ jobs:
         run: |
           Get-Command clang-tidy
           clang-tidy --version
+
+  clang-tidy-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install clang-tidy
+        run: ./tools/metacall-environment.sh debug clangtidy
+
+      - name: Verify clang-tidy
+        run: |
+          which clang-tidy
+          clang-tidy --version
