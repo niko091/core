@@ -16,23 +16,15 @@ file(GLOB_RECURSE
 	${CMAKE_SOURCE_DIR}/source/**/*.inl
 )
 
-file(GLOB_RECURSE
-	ALL_TIDY_SOURCE_FILES
-	LIST_DIRECTORIES OFF
-	FOLLOW_SYMLINKS
-	${CMAKE_SOURCE_DIR}/source/**/*.cpp
-	${CMAKE_SOURCE_DIR}/source/**/*.c
-	${CMAKE_SOURCE_DIR}/source/**/*.cc
-	${CMAKE_SOURCE_DIR}/source/**/*.cxx
-)
-
-if(ClangTidy_FOUND)
+if(ClangTidy_FOUND AND ClangTidy_RUN_EXECUTABLE)
 	add_custom_target(
 		clang-tidy
-		COMMAND ${ClangTidy_EXECUTABLE}
-		-p ${CMAKE_BINARY_DIR}
-		--checks=-*,bugprone-*,clang-analyzer-*,modernize-use-nullptr,readability-braces-around-statements
-		${ALL_TIDY_SOURCE_FILES}
+		COMMAND
+			${ClangTidy_RUN_EXECUTABLE}
+			-p=${CMAKE_BINARY_DIR}
+			-clang-tidy-binary=${ClangTidy_EXECUTABLE}
+			-checks=-*,bugprone-*,clang-analyzer-*,modernize-use-nullptr,readability-braces-around-statements
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	)
 endif()
 

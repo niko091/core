@@ -40,6 +40,13 @@ find_program(ClangTidy_EXECUTABLE
 	PATHS ${ClangTidy_PATHS}
 )
 
+find_program(
+	ClangTidy_RUN_EXECUTABLE
+	NAMES
+		run-clang-tidy
+		run-clang-tidy.py
+)
+
 # Extract version from command "clang-tidy --version"
 if(ClangTidy_EXECUTABLE)
 	execute_process(COMMAND ${ClangTidy_EXECUTABLE} --version
