@@ -25,12 +25,12 @@ jobs:
 
       - name: Install clang-tidy
         if: runner.os != 'Windows'
-        run: ./tools/metacall-environment.sh debug clangtidy
+        run: ./tools/metacall-environment.sh debug clangtidy rapidjson
 
       - name: Install clang-tidy
         if: runner.os == 'Windows'
         shell: pwsh
-        run: .\tools\metacall-environment.ps1 clangtidy
+        run: .\tools\metacall-environment.ps1 clangtidy rapidjson
 
       - name: Verify clang-tidy tools
         if: runner.os != 'Windows'
