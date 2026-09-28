@@ -17,9 +17,16 @@ file(GLOB_RECURSE
 )
 
 if(ClangTidy_FOUND AND ClangTidy_RUN_EXECUTABLE)
+	find_package(
+		Python3
+		COMPONENTS Interpreter
+		REQUIRED
+	)
+
 	add_custom_target(
 		clang-tidy
 		COMMAND
+			${Python3_EXECUTABLE}
 			${ClangTidy_RUN_EXECUTABLE}
 			-p=${CMAKE_BINARY_DIR}
 			-clang-tidy-binary=${ClangTidy_EXECUTABLE}
