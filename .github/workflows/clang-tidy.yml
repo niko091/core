@@ -53,6 +53,16 @@ jobs:
         run: echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> "$GITHUB_ENV"
 
       - name: Configure
+        if: runner.os == 'macOS'
+        run: >
+          cmake
+          -S .
+          -B build
+          -G Ninja
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          -DCMAKE_OSX_SYSROOT="$(xcrun --sdk macosx --show-sdk-path)"
+      - name: Configure
+        if: runner.os != 'macOS'
         run: >
           cmake
           -S .

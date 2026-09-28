@@ -28,6 +28,8 @@ if(ClangTidy_FOUND AND ClangTidy_RUN_EXECUTABLE)
 		COMMAND
 			${Python3_EXECUTABLE}
 			${ClangTidy_RUN_EXECUTABLE}
+			-j #debug
+			1	#debug
 			-p=${CMAKE_BINARY_DIR}
 			-clang-tidy-binary=${ClangTidy_EXECUTABLE}
 			-checks=-*,bugprone-*,clang-analyzer-*,modernize-use-nullptr,readability-braces-around-statements
