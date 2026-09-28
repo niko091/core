@@ -54,13 +54,18 @@ jobs:
 
       - name: Configure
         if: runner.os == 'macOS'
-        run: >
-          cmake
-          -S .
-          -B build
-          -G Ninja
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-          -DCMAKE_OSX_SYSROOT="$(xcrun --sdk macosx --show-sdk-path)"
+        run: |
+          LLVM_PREFIX="$(brew --prefix llvm)"
+
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
+            -DCMAKE_C_COMPILER="${LLVM_PREFIX}/bin/clang" \
+            -DCMAKE_CXX_COMPILER="${LLVM_PREFIX}/bin/clang++" \
+            -DCMAKE_OSX_SYSROOT="${SDKROOT}" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
       - name: Configure
         if: runner.os != 'macOS'
         run: >
@@ -70,5 +75,29 @@ jobs:
           -G Ninja
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      - name: Run clang-tidy (macOS debug)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set +e
+
+          cmake --build build --target clang-tidy 2>&1 | tee clang-tidy.log
+          status=${PIPESTATUS[0]}
+
+          echo ""
+          echo "========================================"
+          echo "clang-tidy errors"
+          echo "========================================"
+
+          grep -nEi \
+            'error:|fatal error:|Error while processing|Found compiler error' \
+            clang-tidy.log || true
+
+          echo ""
+          echo "clang-tidy exit code: $status"
+
+          exit "$status"
+
       - name: Run clang-tidy
+        if: runner.os != 'macOS'
         run: cmake --build build --target clang-tidy
