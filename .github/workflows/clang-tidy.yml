@@ -75,6 +75,17 @@ jobs:
           -G Ninja
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      - name: Prepare RapidJSON
+        if: runner.os == 'macOS'
+        run: cmake --build build --target rapid-json-depends
+
+      - name: Verify RapidJSON
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          echo "RapidJSON headers:"
+          find build -path '*/rapidjson/document.h' -print
+
       - name: Run clang-tidy (macOS debug)
         if: runner.os == 'macOS'
         shell: bash
